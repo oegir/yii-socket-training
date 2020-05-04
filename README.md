@@ -31,6 +31,7 @@ DIRECTORY STRUCTURE
       vendor/             contains dependent 3rd-party packages
       views/              contains view files for the Web application
       web/                contains the entry script and Web resources
+      env/                contains fiels for start local services 
 
 
 
@@ -231,3 +232,10 @@ vendor/bin/codecept run functional,unit -- --coverage-html --coverage-xml
 ```
 
 You can see code coverage output under the `tests/_output` directory.
+
+### Working with local services
+
+```
+# Start servers and web sockets
+$ make up web-socket 
+```

@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "array",
+    "title": "The Root Schema",
+    "description": "Sudoku playground field data",
+    "default": [],
+    "additionalItems": true,
+    "items": {
+        "$id": "#/rows",
+        "type": "array",
+        "title": "Rows",
+        "description": "Playground rows data",
+        "default": [],
+        "additionalItems": false,
+        "minItems": 9,
+        "maxItems": 9,
+        "items": {
+            "$id": "#/rows/items",
+            "type": [
+                "integer",
+                "null"
+            ],
+            "title": "Items",
+            "description": "Playground row items data",
+            "default": null,
+            "minItems": 9,
+            "maxItems": 9
+        }
+    }
+}

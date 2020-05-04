@@ -10,6 +10,12 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@gameSocket' => 'ws://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ':3000',
+    ],
+    'modules' => [
+        'v1' => [
+            'class' => 'app\modules\v1\Module',
+        ],
     ],
     'components' => [
         'request' => [
@@ -43,14 +49,14 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'game/<id>' => 'site/game',
+                'game' => 'site/game',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
@@ -68,7 +74,7 @@ if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1', '174.30.0.1'],
     ];
 }
 

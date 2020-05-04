@@ -11,6 +11,7 @@ return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@gameSocket' => 'ws://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ':3000',
     ],
     'language' => 'en-US',
     'components' => [

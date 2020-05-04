@@ -1,0 +1,77 @@
+version: '3'
+
+services:
+    nginx:
+        image: nginx:stable
+        ports:
+            - "80:80"
+        volumes:
+            - ../${DOMAIN}:/var/www/html/${DOMAIN}
+            - ./server-config/nginx:/etc/nginx/conf.d/
+            - ./data/logs/nginx/:/var/log/nginx
+        links:
+            - php
+        networks:
+            static-network:
+                ipv4_address: 174.30.0.2
+    php:
+        build: docker/images/php-fpm-7.3
+        user: "dev"
+        ports:
+            - "3000:3000"
+        expose:
+            - "9100"
+            - "3000"
+        volumes:
+            - ./data/composer:/home/dev/composer
+            - ./data/tmp/:/tmp
+            - ${HOME}/.ssh:/home/dev/.ssh
+            - ../${DOMAIN}:/var/www/html/${DOMAIN}
+            - ./server-config/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+            - ./server-config/php/dev.ini:/usr/local/etc/php/php.ini
+        links:
+            - mysql
+        environment:
+            - DOMAIN=${DOMAIN}
+            - XDEBUG_CONFIG=remote_host=174.30.0.1
+            - PHP_IDE_CONFIG=serverName=${COMPOSE_PROJECT_NAME}
+        networks:
+            static-network:
+                ipv4_address: 174.30.0.3
+    mysql:
+        image: mariadb:latest
+        ports:
+            - "3306:3306"
+        expose:
+            - "3306"
+        volumes:
+            - ./data/logs/mysql/:/var/log/mysql
+            - ./local:/home/local
+            - mysql-data:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=123
+            - MYSQL_USER=${COMPOSE_PROJECT_NAME}
+            - MYSQL_PASSWORD=${COMPOSE_PROJECT_NAME}
+            - MYSQL_DATABASE=${COMPOSE_PROJECT_NAME}
+        command: mysqld --sql-mode=NO_ENGINE_SUBSTITUTION
+        networks:
+            static-network:
+                ipv4_address: 174.30.0.4
+    redis:
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        networks:
+            static-network:
+                ipv4_address: 174.30.0.5
+    
+volumes:
+    mysql-data:
+
+networks:
+    static-network:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 174.30.0.0/16

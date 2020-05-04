@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+# пересоздает таблицу с правильной кодировкой
+docker-compose exec mariadb mysql -uroot -p123 -e "DROP DATABASE IF EXISTS ${COMPOSE_PROJECT_NAME}"
+docker-compose exec mariadb mysql -uroot -p123 -e "CREATE DATABASE ${COMPOSE_PROJECT_NAME} DEFAULT CHARSET utf8 COLLATE utf8_general_ci"
+
+# накатывает миграции
+docker-compose exec php bash -c "cd /var/www/html/${DOMAIN} && php cli.php migration up"

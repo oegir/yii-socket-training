@@ -8,6 +8,7 @@
 namespace app\assets;
 
 use yii\web\AssetBundle;
+use yii\helpers\Url;
 
 /**
  * Main application asset bundle.
@@ -18,14 +19,33 @@ use yii\web\AssetBundle;
 class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';
+
     public $baseUrl = '@web';
+
     public $css = [
+        'bootstrap3-editable/css/bootstrap-editable.css',
         'css/site.css',
     ];
+
     public $js = [
+        'bootstrap3-editable/js/bootstrap-editable.min.js',
+        'js/jquery.simple.websocket.min.js',
+        'js/site.js',
     ];
+
     public $depends = [
-        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapPluginAsset',
         'yii\bootstrap\BootstrapAsset',
+        'yii\web\JqueryAsset',
     ];
+    
+    /**
+     * @param \yii\web\View $view
+     */
+    public static function register($view)
+    {
+        parent::register($view);
+        
+        $view->registerJsVar('gameSocket', Url::to('@gameSocket/'));
+    }
 }
